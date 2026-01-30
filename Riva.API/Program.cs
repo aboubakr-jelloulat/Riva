@@ -1,16 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using Riva.API.Data.Context;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("constr")));
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+await DbInitializer.SeedDataAsync(app);
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -24,3 +28,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
