@@ -1,0 +1,6 @@
+d226fe5 Revert "Add public void Save() => _db.SaveChanges();"
+a5300d2 Add public void Save() => _db.SaveChanges();
+e522207 Create Database and sed Villa Table
+edbdf22 lunch browser & add scalar & clean default code
+1d93c46 Add project files.
+be2af11 Add .gitattributes and .gitignore.
