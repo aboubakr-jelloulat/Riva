@@ -1,0 +1,6 @@
+@Riva.API_HostAddress = http://localhost:5255
+
+GET {{Riva.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
