@@ -1,27 +1,65 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Riva.API.Data.Repository.IRepository;
+using Riva.API.Models;
+using Riva.DTO;
+using System.Collections;
 namespace Riva.API.Controllers;
 
 [ApiController]
 [Route("api/villa")]
-public class villaController : ControllerBase
+public class VillaController : ControllerBase
 {
-    [HttpGet] // GET api/villa
-    public string GetAllVillas()
+    private readonly IUnitOfWork _unitOfWork;
+
+    public VillaController(IUnitOfWork unitOfWork)
     {
-        return "Get All Villas";
+        _unitOfWork = unitOfWork;
     }
 
-    [HttpGet("{id:int}")] // GET api/villa/1
-    public string GetVillaById(int id)
+    /*
+     * ActionResult<T> : I will return data AND an HTTP status code
+     */
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Villa>>> GetVillas() => Ok(await _unitOfWork.Villa.GetAllAsync());
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Villa>> GetVillaById(int id)
     {
-        return $"Villa {id}";
+        if (id <= 0)
+            return BadRequest("Invalid villa id");
+
+        var villa = await _unitOfWork.Villa.GetAsync(u => u.Id == id);
+
+        if (villa is null)
+            return NotFound();
+
+        return Ok(villa);
     }
 
-    [HttpGet("{id:int}/{Name}")]
-    public string GetVillaByIdAndName(int id, string Name)
+    [HttpPost]
+    public async Task<ActionResult> AddVilla(VillaCreateDTO villaDTO)
     {
-        return $"Villa {id}, Name : {Name}";
+        if (villaDTO is null)
+            return BadRequest("Villa Data is Required");
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        Villa villa = new()
+        {
+            Name = villaDTO.Name,
+            Details = villaDTO.Details,
+            Rate = villaDTO.Rate,
+            Sqft = villaDTO.Sqft,
+            Occupancy = villaDTO.Occupancy,
+            ImageUrl = villaDTO.ImageUrl
+        };
+
+        await _unitOfWork.Villa.AddAsync(villa);
+        await _unitOfWork.Saveasync();
+
+        return Ok(villa);
     }
-
-
 }
+

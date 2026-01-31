@@ -2,7 +2,7 @@
 {
     public interface IUnitOfWork
     {
-        IVillaRepository villaRepository { get; }
+        IVillaRepository Villa { get; }
 
         void Save();
         Task Saveasync();

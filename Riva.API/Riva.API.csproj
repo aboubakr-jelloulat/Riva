@@ -16,4 +16,8 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.12.24" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Riva.DTO\Riva.DTO.csproj" />
+  </ItemGroup>
+
 </Project>

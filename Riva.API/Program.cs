@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Riva.API.Data.Context;
+using Riva.API.Data.Repository.IRepository;
+using Riva.API.Data.Repository.Repositories;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 var app = builder.Build();

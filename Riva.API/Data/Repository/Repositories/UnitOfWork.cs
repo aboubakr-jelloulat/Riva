@@ -7,14 +7,15 @@ namespace Riva.API.Data.Repository.Repositories
     {
         private readonly ApplicationDbContext _db;
 
-        public IVillaRepository villaRepository { get; private set; }
+        public IVillaRepository Villa { get; private set; }
+
 
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
 
 
-            villaRepository = new VillaRepository(_db);
+            Villa = new VillaRepository(_db);
         }
 
         public void Save() => _db.SaveChanges();

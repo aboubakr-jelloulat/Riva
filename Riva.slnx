@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="Riva.API/Riva.API.csproj" />
+  <Project Path="Riva.DTO/Riva.DTO.csproj" Id="8352a9b4-d49a-48bd-b65b-b0d2273ba708" />
 </Solution>
