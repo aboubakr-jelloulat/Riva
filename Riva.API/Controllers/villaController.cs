@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Riva.API.Data.Repository.IRepository;
 using Riva.API.Models;
 using Riva.DTO;
@@ -9,11 +10,13 @@ namespace Riva.API.Controllers;
 [Route("api/villa")]
 public class VillaController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork    _unitOfWork;
+    private readonly IMapper        _mapper;
 
-    public VillaController(IUnitOfWork unitOfWork)
+    public VillaController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper     = mapper;
     }
 
     /*
@@ -46,20 +49,22 @@ public class VillaController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        Villa villa = new()
-        {
-            Name = villaDTO.Name,
-            Details = villaDTO.Details,
-            Rate = villaDTO.Rate,
-            Sqft = villaDTO.Sqft,
-            Occupancy = villaDTO.Occupancy,
-            ImageUrl = villaDTO.ImageUrl
-        };
+        //Villa villa = new()
+        //{
+        //    Name = villaDTO.Name,
+        //    Details = villaDTO.Details,
+        //    Rate = villaDTO.Rate,
+        //    Sqft = villaDTO.Sqft,
+        //    Occupancy = villaDTO.Occupancy,
+        //    ImageUrl = villaDTO.ImageUrl
+        //};
+
+        Villa villa = _mapper.Map<Villa>(villaDTO);
 
         await _unitOfWork.Villa.AddAsync(villa);
         await _unitOfWork.Saveasync();
 
-        return Ok(villa);
+        return CreatedAtAction(nameof(AddVilla), new { id = villa.Id }, villa);
     }
 }
 
