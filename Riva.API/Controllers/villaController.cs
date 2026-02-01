@@ -10,13 +10,13 @@ namespace Riva.API.Controllers;
 [Route("api/villa")]
 public class VillaController : ControllerBase
 {
-    private readonly IUnitOfWork    _unitOfWork;
-    private readonly IMapper        _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
     public VillaController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _mapper     = mapper;
+        _mapper = mapper;
     }
 
     /*
@@ -66,5 +66,46 @@ public class VillaController : ControllerBase
 
         return CreatedAtAction(nameof(AddVilla), new { id = villa.Id }, villa);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> UpdateVilla(int id, VillaUpdateDTO villaDTO)
+    {
+        if (villaDTO is null)
+            return BadRequest("Villa Data is Required");
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if (villaDTO.Id != id)
+            return BadRequest("Villa Id is not match the Villa ID in request body");
+
+        var villaFromDb = await _unitOfWork.Villa.GetAsync(u => u.Id == id, tracked: true);
+
+        if (villaFromDb is null)
+            return NotFound($"Villa with ID {id} not found");
+
+        _mapper.Map(villaDTO, villaFromDb);
+
+        villaFromDb.UpdatedDate = DateTime.Now;
+
+        await _unitOfWork.Saveasync();
+
+        return Ok(villaFromDb);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteVilla(int id)
+    {
+        var villaFromDb = await _unitOfWork.Villa.GetAsync(u => u.Id == id);
+
+        if (villaFromDb is null)
+            return NotFound($"Villa with Id : {id} was not Found");
+
+        await _unitOfWork.Villa.RemoveAsync(villaFromDb);
+        await _unitOfWork.Saveasync();
+
+        return NoContent();
+    }
+    
+
 }
 

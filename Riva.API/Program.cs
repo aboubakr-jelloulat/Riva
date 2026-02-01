@@ -19,6 +19,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(options => 
 {
     options.CreateMap<VillaCreateDTO, Villa>();
+    options.CreateMap<VillaUpdateDTO, Villa>();
 });
 
 var app = builder.Build();
