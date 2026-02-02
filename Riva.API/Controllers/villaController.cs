@@ -23,28 +23,35 @@ public class VillaController : ControllerBase
      * ActionResult<T> : I will return data AND an HTTP status code
      */
 
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
+    public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {
         var villas = await _unitOfWork.Villa.GetAllAsync();
 
-        return Ok(_mapper.Map<List<VillaDTO>>(villas));
+        var villaDtos = _mapper.Map<List<VillaDTO>>(villas);
+
+        var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(villaDtos, "Villas retrieved successfully");
+
+        return Ok(response);
     }
-    
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<VillaDTO>> GetVillaById(int id)
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> GetVillaById(int id)
     {
         if (id <= 0)
-            return BadRequest("Invalid villa id");
+            return BadRequest(ApiResponse<VillaDTO>.BadRequest("Invalid villa id"));
 
         var villa = await _unitOfWork.Villa.GetAsync(u => u.Id == id);
 
         if (villa is null)
-            return NotFound();
+            return NotFound(ApiResponse<VillaDTO>.NotFound("Villa not found"));
 
-        return Ok(_mapper.Map<VillaDTO>(villa));
+        var villaDto = _mapper.Map<VillaDTO>(villa);
+        return Ok(ApiResponse<VillaDTO>.Ok(villaDto, "Record retrieved successfully"));
     }
+
+
 
     [HttpPost]
     public async Task<ActionResult<VillaCreateDTO>> CreateVilla(VillaCreateDTO villaDTO)
@@ -58,20 +65,7 @@ public class VillaController : ControllerBase
         var isDuplicatVilla = await _unitOfWork.Villa.GetAsync(u => u.Name.ToLower() == villaDTO.Name.ToLower());
         if (isDuplicatVilla is not null)
             return Conflict($"Villa With the Name [ {villaDTO.Name} ] Already exists");
-            /*
-             * Conflict() :  The request is valid but it can’t be completed because it conflicts with the current state of the server.
-             * The client tries to create or update something BUT that action violates a rule or already exists
-             */
-
-        //Villa villa = new()
-        //{
-        //    Name = villaDTO.Name,
-        //    Details = villaDTO.Details,
-        //    Rate = villaDTO.Rate,
-        //    Sqft = villaDTO.Sqft,
-        //    Occupancy = villaDTO.Occupancy,
-        //    ImageUrl = villaDTO.ImageUrl
-        //};
+          
 
         Villa villa = _mapper.Map<Villa>(villaDTO);
 
