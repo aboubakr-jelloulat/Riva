@@ -24,10 +24,16 @@ public class VillaController : ControllerBase
      */
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Villa>>> GetVillas() => Ok(await _unitOfWork.Villa.GetAllAsync());
+    public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
+    {
+        var villas = await _unitOfWork.Villa.GetAllAsync();
+
+        return Ok(_mapper.Map<List<VillaDTO>>(villas));
+    }
+    
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Villa>> GetVillaById(int id)
+    public async Task<ActionResult<VillaDTO>> GetVillaById(int id)
     {
         if (id <= 0)
             return BadRequest("Invalid villa id");
@@ -37,17 +43,25 @@ public class VillaController : ControllerBase
         if (villa is null)
             return NotFound();
 
-        return Ok(villa);
+        return Ok(_mapper.Map<VillaDTO>(villa));
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddVilla(VillaCreateDTO villaDTO)
+    public async Task<ActionResult<VillaCreateDTO>> CreateVilla(VillaCreateDTO villaDTO)
     {
         if (villaDTO is null)
             return BadRequest("Villa Data is Required");
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
+        var isDuplicatVilla = await _unitOfWork.Villa.GetAsync(u => u.Name.ToLower() == villaDTO.Name.ToLower());
+        if (isDuplicatVilla is not null)
+            return Conflict($"Villa With the Name [ {villaDTO.Name} ] Already exists");
+            /*
+             * Conflict() :  The request is valid but it can’t be completed because it conflicts with the current state of the server.
+             * The client tries to create or update something BUT that action violates a rule or already exists
+             */
 
         //Villa villa = new()
         //{
@@ -64,11 +78,11 @@ public class VillaController : ControllerBase
         await _unitOfWork.Villa.AddAsync(villa);
         await _unitOfWork.Saveasync();
 
-        return CreatedAtAction(nameof(AddVilla), new { id = villa.Id }, villa);
+        return CreatedAtAction(nameof(CreateVilla), new { id = villa.Id }, _mapper.Map<VillaCreateDTO>(villa));
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateVilla(int id, VillaUpdateDTO villaDTO)
+    public async Task<ActionResult<VillaDTO>> UpdateVilla(int id, VillaUpdateDTO villaDTO)
     {
         if (villaDTO is null)
             return BadRequest("Villa Data is Required");
@@ -79,9 +93,14 @@ public class VillaController : ControllerBase
             return BadRequest("Villa Id is not match the Villa ID in request body");
 
         var villaFromDb = await _unitOfWork.Villa.GetAsync(u => u.Id == id, tracked: true);
-
         if (villaFromDb is null)
             return NotFound($"Villa with ID {id} not found");
+
+        var isDuplicatVilla = await _unitOfWork.Villa.GetAsync(u => u.Id != id && u.Name.ToLower() == villaDTO.Name.ToLower());
+        if (isDuplicatVilla is not null)
+            return Conflict($"Villa With the Name [ {villaDTO.Name} ] Already exists");
+            
+
 
         _mapper.Map(villaDTO, villaFromDb);
 
