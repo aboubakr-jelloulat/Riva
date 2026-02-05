@@ -9,6 +9,7 @@ namespace Riva.API.Data.Repository.Repositories
 
         public IVillaRepository Villa { get; private set; }
 
+        public IUserRepository Users { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -16,6 +17,7 @@ namespace Riva.API.Data.Repository.Repositories
 
 
             Villa = new VillaRepository(_db);
+            Users = new UserRepository(_db);
         }
 
         public void Save() => _db.SaveChanges();

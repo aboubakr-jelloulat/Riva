@@ -3,6 +3,7 @@
     public interface IUnitOfWork
     {
         IVillaRepository Villa { get; }
+        IUserRepository Users { get; }
 
         void Save();
         Task Saveasync();
