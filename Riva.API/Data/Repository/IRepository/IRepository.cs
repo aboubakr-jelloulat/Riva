@@ -16,10 +16,13 @@ namespace Riva.API.Data.Repository.IRepository
 
 
         void Remove(T entity);
-        Task RemoveAsync(T entity);
 
 
         void RemoveRange(IEnumerable<T> entities);
         Task RemoveRangeAsync(IEnumerable<T> entities);
+
+
+        Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
+
     }
 }

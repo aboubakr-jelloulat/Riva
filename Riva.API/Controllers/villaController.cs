@@ -121,7 +121,7 @@ public class VillaController : ControllerBase
         if (villa is null)
             return NotFound(ApiResponse<object>.NotFound("Villa not found"));
 
-        await _unitOfWork.Villa.RemoveAsync(villa);
+        _unitOfWork.Villa.Remove(villa);
         await _unitOfWork.Saveasync();
 
         return NoContent();

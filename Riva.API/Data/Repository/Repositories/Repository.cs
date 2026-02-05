@@ -72,13 +72,16 @@ namespace Riva.API.Data.Repository.Repositories
 
 
         public void Remove(T entity) => dbSet.Remove(entity);
-
-        public async Task RemoveAsync(T entity) => await Task.Run(() => dbSet.Remove(entity));
-
         public void RemoveRange(IEnumerable<T> entities) => dbSet.RemoveRange(entities);
+
 
         public async Task RemoveRangeAsync(IEnumerable<T> entities) => await Task.Run(() => dbSet.RemoveRange(entities));
 
+
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
+        {
+            return await dbSet.AnyAsync(filter);
+        }
 
 
         private static IQueryable<T> ApplyIncludes(IQueryable<T> query, string? includeProperties)

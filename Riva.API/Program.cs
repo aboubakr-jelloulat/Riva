@@ -3,6 +3,8 @@ using Riva.API.Data.Context;
 using Riva.API.Data.Repository.IRepository;
 using Riva.API.Data.Repository.Repositories;
 using Riva.API.Models;
+using Riva.API.Services;
+using Riva.API.Services.IServices;
 using Riva.DTO;
 using Scalar.AspNetCore;
 
@@ -14,14 +16,17 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 builder.Services.AddAutoMapper(options => 
 {
     options.CreateMap<VillaCreateDTO, Villa>().ReverseMap();
     options.CreateMap<VillaUpdateDTO, Villa>().ReverseMap();
     options.CreateMap<VillaDTO,       Villa>().ReverseMap();
+    options.CreateMap<UserDTO,        User>().ReverseMap();
 });
+
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
