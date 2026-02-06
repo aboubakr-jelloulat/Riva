@@ -49,6 +49,22 @@ namespace Riva.API.Controllers
         }
 
 
+        [HttpPost("login")]
+        public async Task<ActionResult<ApiResponse<LoginResponseDTO>>> Login([FromBody] LoginRequestDTO loginRequestDTO)
+        {
+            var result = await _authService.LoginAsync(loginRequestDTO);
+
+            if (result is null)
+            {
+                return BadRequest(ApiResponse<LoginResponseDTO>.BadRequest("Invalid email or password"));
+            }
+
+            var response = ApiResponse<LoginResponseDTO>.Ok(result, "Login successful");
+
+            return Ok(response);
+        }
+
+
 
     }
 }
