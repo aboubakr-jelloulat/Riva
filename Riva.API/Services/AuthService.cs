@@ -41,10 +41,12 @@ public class AuthService : IAuthService
 
             if (user is null) return null;
 
+            var token = GenerateJwtToken(user);
+
             return new LoginResponseDTO
             {
                 UserDTO = _mapper.Map<UserDTO>(user),
-                Token = "abc"
+                Token = token
             };
 
         }

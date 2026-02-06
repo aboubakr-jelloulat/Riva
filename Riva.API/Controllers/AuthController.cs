@@ -13,7 +13,7 @@ namespace Riva.API.Controllers
         private readonly IAuthService _authService = authService;
 
 
-        [HttpPost]
+        [HttpPost("register")]
 
         [ProducesResponseType(typeof(ApiResponse<UserDTO>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -50,18 +50,35 @@ namespace Riva.API.Controllers
 
 
         [HttpPost("login")]
+
+        [ProducesResponseType(typeof(ApiResponse<LoginResponseDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+
         public async Task<ActionResult<ApiResponse<LoginResponseDTO>>> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
-            var result = await _authService.LoginAsync(loginRequestDTO);
-
-            if (result is null)
+            try
             {
-                return BadRequest(ApiResponse<LoginResponseDTO>.BadRequest("Invalid email or password"));
+                if (loginRequestDTO is null)
+                    return BadRequest(ApiResponse<object>.BadRequest("Login data is required"));
+
+                var loginResponse = await _authService.LoginAsync(loginRequestDTO);
+
+                if (loginResponse is null)
+                {
+                    return BadRequest(ApiResponse<object>.BadRequest("Login failed"));
+                }
+
+                var response = ApiResponse<LoginResponseDTO>.Ok(loginResponse, "Login successful");
+
+                return Ok(response);
             }
+            catch (Exception ex)
+            {
+                var errorResponse = ApiResponse<object>.Error(500, "An error occurred during Login", ex.Message);
+                return StatusCode(500, errorResponse);
 
-            var response = ApiResponse<LoginResponseDTO>.Ok(result, "Login successful");
-
-            return Ok(response);
+            }
         }
 
 
