@@ -15,9 +15,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 
 builder.Services.JwtConfigureServices(builder.Configuration);
 
+
+builder.Services.AddScalarBearerAuth("v1", "Riva API");
+
+
 builder.Services.AddControllers();
 
-builder.Services.AddOpenApi();
 
 builder.Services.AddAutoMapper(options => 
 {
@@ -30,6 +33,7 @@ builder.Services.AddAutoMapper(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 var app = builder.Build();
 

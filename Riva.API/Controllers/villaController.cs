@@ -7,6 +7,7 @@ using Riva.DTO;
 
 [ApiController]
 [Route("api/villa")]
+[Authorize(Roles = "Admin, Customer")]
 public class VillaController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -19,8 +20,6 @@ public class VillaController : ControllerBase
     }
 
     [HttpGet]
-
-    [Authorize]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaDTO>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {
@@ -32,7 +31,6 @@ public class VillaController : ControllerBase
     }
 
     [HttpGet("{id}")]
-
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -112,7 +110,7 @@ public class VillaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
