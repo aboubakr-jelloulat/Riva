@@ -5,12 +5,15 @@ using Riva.API.Data.Repository.Repositories;
 using Riva.API.Models;
 using Riva.API.Services;
 using Riva.API.Services.IServices;
+using Riva.API.Utils;
 using Riva.DTO;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("constr")));
+
+builder.Services.JwtConfigureServices(builder.Configuration);
 
 builder.Services.AddControllers();
 
@@ -39,6 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

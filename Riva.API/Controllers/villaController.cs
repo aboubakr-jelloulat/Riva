@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Riva.API.Data.Repository.IRepository;
 using Riva.API.Models;
@@ -19,6 +20,7 @@ public class VillaController : ControllerBase
 
     [HttpGet]
 
+    [Authorize]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaDTO>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-namespace Riva.API.Data.Context;
+using Riva.API.Data.Context;
 
+namespace Riva.API.Utils;
 
 // It automatically updates the database when the application starts.
 public static class DbInitializer
@@ -13,4 +14,3 @@ public static class DbInitializer
         await context.Database.MigrateAsync();
     }
 }
-
