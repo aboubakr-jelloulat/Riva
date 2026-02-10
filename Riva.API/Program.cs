@@ -22,12 +22,18 @@ builder.Services.AddScalarBearerAuth("v1", "Riva API");
 builder.Services.AddControllers();
 
 
-builder.Services.AddAutoMapper(options => 
+builder.Services.AddAutoMapper(cfg =>
 {
-    options.CreateMap<VillaCreateDTO, Villa>().ReverseMap();
-    options.CreateMap<VillaUpdateDTO, Villa>().ReverseMap();
-    options.CreateMap<VillaDTO,       Villa>().ReverseMap();
-    options.CreateMap<UserDTO,        User>().ReverseMap();
+    cfg.CreateMap<Villa, VillaDTO>();
+    cfg.CreateMap<VillaCreateDTO, Villa>();
+    cfg.CreateMap<VillaUpdateDTO, Villa>();
+
+    cfg.CreateMap<User, UserDTO>().ReverseMap();
+
+    cfg.CreateMap<VillaAmenities, VillaAmentiesDTO>().ForMember(dest => dest.VillaName, opt => opt.MapFrom(src => src.Villa.Name));
+
+    cfg.CreateMap<VillaAmentiesCreateDTO, VillaAmenities>();
+    cfg.CreateMap<VillaAmentiesUpdateDTO, VillaAmenities>();
 });
 
 
