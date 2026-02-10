@@ -16,14 +16,7 @@ public class Villa
     public DateTime CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
 
+    public ICollection<VillaAmenities>? Amenities { get; set; }
+
 }
 
-/*
-    | Feature           | `[Required]`                                                            | `required` keyword                                     |
-    | ----------------- | ----------------------------------------------------------------------- | ------------------------------------------------------ |
-    | **Type**          | Attribute / Annotation                                                  | C# language keyword                                    |
-    | **When it works** | At **runtime**, usually during **model validation** or **saving to DB** | At **compile time**, ensures **object is initialized** |
-    | **Nullability**   | Prevents **null in database / validation**                              | Forces **property to be set when object is created**   |
-    | **Example**       | `[Required] public string Name { get; set; }`                           | `public required string Name { get; set; }`            |
-
-*/

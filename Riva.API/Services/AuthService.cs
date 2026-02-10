@@ -101,7 +101,7 @@ public class AuthService : IAuthService
                 new Claim(ClaimTypes.Role, user.Role)
             }),
 
-            Expires = DateTime.UtcNow.AddDays(1),
+            Expires = DateTime.UtcNow.AddDays(7),
 
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 
