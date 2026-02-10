@@ -24,16 +24,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(cfg =>
 {
-    cfg.CreateMap<Villa, VillaDTO>();
-    cfg.CreateMap<VillaCreateDTO, Villa>();
-    cfg.CreateMap<VillaUpdateDTO, Villa>();
+    cfg.CreateMap<Villa, VillaDTO>().ReverseMap();
+    cfg.CreateMap<VillaCreateDTO, Villa>().ReverseMap();
+    cfg.CreateMap<VillaUpdateDTO, Villa>().ReverseMap();
 
     cfg.CreateMap<User, UserDTO>().ReverseMap();
 
-    cfg.CreateMap<VillaAmenities, VillaAmentiesDTO>().ForMember(dest => dest.VillaName, opt => opt.MapFrom(src => src.Villa.Name));
+    cfg.CreateMap<VillaAmenities, VillaAmentiesDTO>().ForMember(dest => dest.VillaName, opt => opt.MapFrom(src => src.Villa != null ? src.Villa.Name : null)).ReverseMap();
 
-    cfg.CreateMap<VillaAmentiesCreateDTO, VillaAmenities>();
-    cfg.CreateMap<VillaAmentiesUpdateDTO, VillaAmenities>();
+    cfg.CreateMap<VillaAmentiesCreateDTO, VillaAmenities>().ReverseMap();
+    cfg.CreateMap<VillaAmentiesUpdateDTO, VillaAmenities>().ReverseMap();
 });
 
 
