@@ -20,6 +20,7 @@ namespace Riva.API.Data.Repository.Repositories
 
             Villa = new VillaRepository(_db);
             Users = new UserRepository(_db);
+            VillaAmenties = new VillaAmentiesRepository(_db);
         }
 
         public void Save() => _db.SaveChanges();
