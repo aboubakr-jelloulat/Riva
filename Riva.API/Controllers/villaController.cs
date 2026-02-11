@@ -37,12 +37,12 @@ public class VillaController : ControllerBase
     public async Task<ActionResult<ApiResponse<VillaDTO>>> GetVillaById(int id)
     {
         if (id <= 0)
-            return BadRequest(ApiResponse<VillaDTO>.BadRequest("Invalid villa id"));
+            return BadRequest(ApiResponse<object>.BadRequest("Invalid villa id"));
 
         var villa = await _unitOfWork.Villa.GetAsync(u => u.Id == id);
 
         if (villa is null)
-            return NotFound(ApiResponse<VillaDTO>.NotFound("Villa not found"));
+            return NotFound(ApiResponse<object>.NotFound("Villa not found"));
 
         var villaDto = _mapper.Map<VillaDTO>(villa);
 
@@ -57,12 +57,12 @@ public class VillaController : ControllerBase
     public async Task<ActionResult<ApiResponse<VillaCreateDTO>>> CreateVilla(VillaCreateDTO villaDTO)
     {
         if (villaDTO is null)
-            return BadRequest(ApiResponse<VillaCreateDTO>.BadRequest("Villa data is required"));
+            return BadRequest(ApiResponse<object>.BadRequest("Villa data is required"));
 
         var exists = await _unitOfWork.Villa.GetAsync(u => u.Name.ToLower() == villaDTO.Name.ToLower());
 
         if (exists is not null)
-            return Conflict(ApiResponse<VillaCreateDTO>.Conflict($"Villa '{villaDTO.Name}' already exists"));
+            return Conflict(ApiResponse<object>.Conflict($"Villa '{villaDTO.Name}' already exists"));
 
         var villa = _mapper.Map<Villa>(villaDTO);
 
@@ -81,11 +81,11 @@ public class VillaController : ControllerBase
     public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla(int id, VillaUpdateDTO villaDTO)
     {
         if (villaDTO is null)
-            return BadRequest(ApiResponse<VillaDTO>.BadRequest("Invalid request data"));
+            return BadRequest(ApiResponse<object>.BadRequest("Invalid request data"));
 
         if (id != villaDTO.Id)
         {
-            return BadRequest(ApiResponse<VillaDTO>.BadRequest("Villa Id is not match the Villa ID in request body"));
+            return BadRequest(ApiResponse<object>.BadRequest("Villa Id is not match the Villa ID in request body"));
         }
 
         var villaFromDb = await _unitOfWork.Villa.GetAsync(u => u.Id == id, tracked: true);
@@ -96,7 +96,7 @@ public class VillaController : ControllerBase
         var duplicate = await _unitOfWork.Villa.GetAsync(u => u.Id != id && u.Name.ToLower() == villaDTO.Name.ToLower());
 
         if (duplicate is not null)
-            return Conflict(ApiResponse<VillaDTO>.Conflict($"Villa '{villaDTO.Name}' already exists"));
+            return Conflict(ApiResponse<object>.Conflict($"Villa '{villaDTO.Name}' already exists"));
 
         _mapper.Map(villaDTO, villaFromDb);
         villaFromDb.UpdatedDate = DateTime.UtcNow;
