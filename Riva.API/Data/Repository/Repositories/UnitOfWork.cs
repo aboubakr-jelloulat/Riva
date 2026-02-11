@@ -11,6 +11,8 @@ namespace Riva.API.Data.Repository.Repositories
 
         public IUserRepository Users { get; private set; }
 
+        public IVillaAmentiesRepository VillaAmenties { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
