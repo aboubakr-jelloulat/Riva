@@ -4,6 +4,9 @@
     {
         IVillaRepository Villa { get; }
         IUserRepository Users { get; }
+        IVillaAmentiesRepository VillaAmenties { get; }
+
+
 
         void Save();
         Task Saveasync();
