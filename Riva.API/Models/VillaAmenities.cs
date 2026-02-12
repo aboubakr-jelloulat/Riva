@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Riva.API.Models;
 
-public class VillaAmenities
+public class VillaAmenties
 {
     [Key]
     public int Id { get; set; }

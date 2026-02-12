@@ -59,6 +59,7 @@ public class VillaController : ControllerBase
         if (villaDTO is null)
             return BadRequest(ApiResponse<object>.BadRequest("Villa data is required"));
 
+        // already exists in the database
         var exists = await _unitOfWork.Villa.GetAsync(u => u.Name.ToLower() == villaDTO.Name.ToLower());
 
         if (exists is not null)
@@ -70,7 +71,7 @@ public class VillaController : ControllerBase
         await _unitOfWork.Saveasync();
 
         var response = ApiResponse<VillaCreateDTO>.CreatedAt(_mapper.Map<VillaCreateDTO>(villa), "Villa created successfully");
-        return CreatedAtAction(nameof(GetVillaById), new { id = villa.Id }, response);
+        return CreatedAtAction(nameof(CreateVilla), new { id = villa.Id }, response);
     }
 
     [HttpPut("{id:int}")]

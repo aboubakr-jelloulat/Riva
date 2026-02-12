@@ -30,10 +30,10 @@ builder.Services.AddAutoMapper(cfg =>
 
     cfg.CreateMap<User, UserDTO>().ReverseMap();
 
-    cfg.CreateMap<VillaAmenities, VillaAmentiesDTO>().ForMember(dest => dest.VillaName, opt => opt.MapFrom(src => src.Villa != null ? src.Villa.Name : null)).ReverseMap();
+    cfg.CreateMap<VillaAmenties, VillaAmentiesDTO>().ForMember(dest => dest.VillaName, opt => opt.MapFrom(src => src.Villa != null ? src.Villa.Name : null)).ReverseMap();
 
-    cfg.CreateMap<VillaAmentiesCreateDTO, VillaAmenities>().ReverseMap();
-    cfg.CreateMap<VillaAmentiesUpdateDTO, VillaAmenities>().ReverseMap();
+    cfg.CreateMap<VillaAmentiesCreateDTO, VillaAmenties>().ReverseMap();
+    cfg.CreateMap<VillaAmentiesUpdateDTO, VillaAmenties>().ReverseMap();
 });
 
 

@@ -3,7 +3,7 @@
 namespace Riva.API.Data.Repository.IRepository;
 
 
-public interface IVillaAmentiesRepository :  IRepository<VillaAmenities>
+public interface IVillaAmentiesRepository :  IRepository<VillaAmenties>
 {
 
 }

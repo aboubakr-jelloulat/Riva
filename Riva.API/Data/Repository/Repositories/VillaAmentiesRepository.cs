@@ -4,7 +4,7 @@ using Riva.API.Models;
 
 namespace Riva.API.Data.Repository.Repositories;
 
-public class VillaAmentiesRepository : Repository<VillaAmenities>, IVillaAmentiesRepository
+public class VillaAmentiesRepository : Repository<VillaAmenties>, IVillaAmentiesRepository
 {
     public VillaAmentiesRepository(ApplicationDbContext db) : base(db)
     {
