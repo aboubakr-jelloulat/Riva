@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Riva.DTO;
 
-public class VillaAmentiesUpdateDTO
+
+public class VillaAmenitiesDTO
 {
     [Key]
     public int Id { get; set; }
@@ -17,4 +19,7 @@ public class VillaAmentiesUpdateDTO
 
     [Required]
     public int VillaId { get; set; }
+
+    public string? VillaName { get; set; }
+
 }

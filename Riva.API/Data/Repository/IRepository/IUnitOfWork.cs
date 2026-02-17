@@ -4,11 +4,11 @@
     {
         IVillaRepository Villa { get; }
         IUserRepository Users { get; }
-        IVillaAmentiesRepository VillaAmenties { get; }
+        IVillaAmentiesRepository VillaAmenities { get; }
 
 
 
         void Save();
-        Task Saveasync();
+        Task SaveAsync();
     }
 }

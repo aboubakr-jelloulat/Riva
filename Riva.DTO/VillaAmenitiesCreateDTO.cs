@@ -6,7 +6,7 @@ using System.Text;
 namespace Riva.DTO;
 
 
-public class VillaAmentiesCreateDTO
+public class VillaAmenitiesCreateDTO
 {
     [Required, MaxLength(100)]
     public required string Name { get; set; }

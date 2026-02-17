@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -11,95 +12,156 @@ namespace Riva.API.Controllers;
 
 
 [ApiController]
-[Route("api/villaAmenties")]
-public class VillaAmentiesController : ControllerBase
+[Route("api/villaAmenities")]
+//[Authorize(Roles = "Admin")]
+public class VillaAmenitiesController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-
-    public VillaAmentiesController(IUnitOfWork unitOfWork, IMapper mapper)
+    public VillaAmenitiesController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     [HttpGet]
-
-    [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaAmentiesDTO>>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApiResponse<IEnumerable<VillaAmentiesDTO>>>> GetVillaAmenties()
+    [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaAmenitiesDTO>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<IEnumerable<VillaAmenitiesDTO>>>> GetVillaAmenities()
     {
+        var villaAmenities = await _unitOfWork.VillaAmenities.GetAllAsync();
 
-        var villaAmenties = await _unitOfWork.VillaAmenties.GetAllAsync();
+        var villaAmenitiesDtos = _mapper.Map<List<VillaAmenitiesDTO>>(villaAmenities);
 
-        var villaAmentiesDtos = _mapper.Map<List<VillaAmentiesDTO>>(villaAmenties);
-
-        var response = ApiResponse<IEnumerable<VillaAmentiesDTO>>.Ok(villaAmentiesDtos, "Villas Amenties retrieved successfully");
+        var response = ApiResponse<IEnumerable<VillaAmenitiesDTO>>.Ok(villaAmenitiesDtos, "Villa amenities retrieved successfully");
 
         return Ok(response);
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(ApiResponse<VillaAmentiesDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<VillaAmenitiesDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-
-    public async Task<ActionResult<ApiResponse<VillaAmentiesDTO>>> GetVillaAmentiesById(int id)
+    public async Task<ActionResult<ApiResponse<VillaAmenitiesDTO>>> GetVillaAmenitiesById(int id)
     {
         try
         {
             if (id <= 0)
-                return NotFound(ApiResponse<object>.NotFound("VillaAmenities ID must be greater than 0"));
+                return BadRequest(ApiResponse<object>.BadRequest("VillaAmenities ID must be greater than 0"));
 
-            var villaAmenities = await _unitOfWork.VillaAmenties.GetAsync(u => u.Id == id);
+            var villaAmenities = await _unitOfWork.VillaAmenities.GetAsync(u => u.Id == id);
 
             if (villaAmenities is null)
                 return NotFound(ApiResponse<object>.NotFound($"VillaAmenities with ID {id} was not found"));
 
-            var response = ApiResponse<VillaAmentiesDTO>.Ok(_mapper.Map<VillaAmentiesDTO>(villaAmenities), "VillaAmenities retrieved successfully");
+            var response = ApiResponse<VillaAmenitiesDTO>.Ok(_mapper.Map<VillaAmenitiesDTO>(villaAmenities), "VillaAmenities retrieved successfully");
 
             return Ok(response);
         }
         catch (Exception ex)
         {
-            var errorResponse = ApiResponse<object>.Error(500, "An error occurred while retrieve the VillaAmenities : ", ex.Message);
+            var errorResponse = ApiResponse<object>.Error(500, "An error occurred while retrieving the VillaAmenities: ", ex.Message);
             return StatusCode(500, errorResponse);
         }
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(ApiResponse<VillaCreateDTO>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<VillaAmenitiesDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse<VillaAmentiesDTO>>> Create([FromBody]VillaCreateDTO model)
+    public async Task<ActionResult<ApiResponse<VillaAmenitiesDTO>>> Create([FromBody] VillaAmenitiesCreateDTO model)
     {
         try
         {
             if (model is null)
                 return BadRequest(ApiResponse<object>.BadRequest("VillaAmenities data is required"));
 
-            var isExist = await _unitOfWork.VillaAmenties.GetAsync(u => u.Name.ToLower() == model.Name.ToLower());
+            var isExist = await _unitOfWork.VillaAmenities.GetAsync(u => u.Name.ToLower() == model.Name.ToLower());
 
-            if (isExist is null)
-                    return Conflict(ApiResponse<object>.Conflict($"VillaAmenities '{model.Name}' already exists"));
+            if (isExist is not null)
+                return Conflict(ApiResponse<object>.Conflict($"VillaAmenities '{model.Name}' already exists"));
 
-            var amenties = _mapper.Map<VillaAmenties>(model);
+            var amenities = _mapper.Map<VillaAmenities>(model);
 
-            await _unitOfWork.VillaAmenties.AddAsync(amenties);
-            await _unitOfWork.Saveasync();
+            amenities.CreatedDate = DateTime.UtcNow;
 
-            var response = ApiResponse<VillaAmentiesDTO>.CreatedAt(_mapper.Map<VillaAmentiesDTO>(amenties), "Villa Amenities created successfully");
+            await _unitOfWork.VillaAmenities.AddAsync(amenities);
 
-            return CreatedAtAction(nameof(Create), new { id = amenties.Id }, response);
+            await _unitOfWork.SaveAsync();
+
+            var response = ApiResponse<VillaAmenitiesDTO>.CreatedAt(_mapper.Map<VillaAmenitiesDTO>(amenities), "VillaAmenities created successfully");
+
+            return CreatedAtAction(nameof(GetVillaAmenitiesById), new { id = amenities.Id }, response);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            var errorResponse = ApiResponse<object>.Error(500, "An error occurred while creating the VillaAmenities : ", ex.Message);
+            var errorResponse = ApiResponse<object>.Error(500, "An error occurred while creating the VillaAmenities: ", ex.Message);
             return StatusCode(500, errorResponse);
         }
     }
 
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<VillaAmenitiesDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<VillaAmenitiesDTO>>> Update(int id, [FromBody] VillaAmenitiesUpdateDTO model)
+    {
+        try
+        {
+            if (model is null)
+                return BadRequest(ApiResponse<object>.BadRequest("Invalid request data"));
 
+            if (id != model.Id)
+                return BadRequest(ApiResponse<object>.BadRequest("VillaAmenities ID does not match the model ID in request body"));
 
+            var villaAmenitiesFromDb = await _unitOfWork.VillaAmenities.GetAsync(u => u.Id == id, tracked: true);
+
+            if (villaAmenitiesFromDb is null)
+                return NotFound(ApiResponse<object>.NotFound($"VillaAmenities with ID {id} was not found"));
+
+            _mapper.Map(model, villaAmenitiesFromDb);
+
+            villaAmenitiesFromDb.UpdatedDate = DateTime.UtcNow;
+
+            await _unitOfWork.SaveAsync();
+
+            var response = ApiResponse<VillaAmenitiesDTO>.Ok(_mapper.Map<VillaAmenitiesDTO>(villaAmenitiesFromDb), "VillaAmenities updated successfully");
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            var errorResponse = ApiResponse<object>.Error(500, "An error occurred while updating the VillaAmenities: ", ex.Message);
+            return StatusCode(500, errorResponse);
+        }
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<object>>> Delete(int id)
+    {
+        try
+        {
+            var villaAmenities = await _unitOfWork.VillaAmenities.GetAsync(u => u.Id == id, tracked: true);
+
+            if (villaAmenities is null)
+                return NotFound(ApiResponse<object>.NotFound($"VillaAmenities with ID {id} was not found"));
+
+            _unitOfWork.VillaAmenities.Remove(villaAmenities);
+
+            await _unitOfWork.SaveAsync();
+
+            return Ok(ApiResponse<object>.Ok(null, "VillaAmenities deleted successfully"));
+        }
+        catch (Exception ex)
+        {
+            var errorResponse = ApiResponse<object>.Error(500, "An error occurred while deleting the VillaAmenities: ", ex.Message);
+            return StatusCode(500, errorResponse);
+        }
+    }
 }

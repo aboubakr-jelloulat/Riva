@@ -75,7 +75,7 @@ public class AuthService : IAuthService
             };
 
             await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.Saveasync();
+            await _unitOfWork.SaveAsync();
 
             return _mapper.Map<UserDTO>(user);
         }

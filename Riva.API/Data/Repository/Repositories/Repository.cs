@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Riva.API.Data.Context;
 using Riva.API.Data.Repository.IRepository;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace Riva.API.Data.Repository.Repositories
 {
+
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
