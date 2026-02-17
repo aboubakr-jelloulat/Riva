@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Riva.API/Riva.API.csproj" />
   <Project Path="Riva.DTO/Riva.DTO.csproj" Id="8352a9b4-d49a-48bd-b65b-b0d2273ba708" />
+  <Project Path="Riva.Web/Riva.Web.csproj" Id="dfdada70-f17a-4d0f-a019-59bdb755a8b0" />
 </Solution>
