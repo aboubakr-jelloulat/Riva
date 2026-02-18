@@ -1,4 +1,4 @@
-﻿using static Riva.Web.Shared.Shared;
+﻿using static Riva.Web.Shared.Utils;
 
 namespace Riva.Web.Shared;
 

@@ -1,7 +1,7 @@
 ﻿namespace Riva.Web.Shared;
 
 
-public static class Shared
+public static class Utils
 {
     public enum HTTPmethods
     {

@@ -40,6 +40,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -51,6 +52,8 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("*"));
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -60,6 +63,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
 

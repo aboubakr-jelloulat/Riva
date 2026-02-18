@@ -2,7 +2,7 @@
 using Riva.Web.Services.IServices;
 using Riva.Web.Shared;
 using System.Text.Json;
-using static Riva.Web.Shared.Shared;
+using static Riva.Web.Shared.Utils;
 
 
 namespace Riva.Web.Services;
