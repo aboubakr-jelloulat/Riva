@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Riva.API\Riva.API.csproj" />
+    <ProjectReference Include="..\Riva.DTO\Riva.DTO.csproj" />
+  </ItemGroup>
+
 </Project>
