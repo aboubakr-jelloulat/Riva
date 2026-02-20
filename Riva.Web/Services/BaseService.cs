@@ -35,8 +35,18 @@ public class BaseService : IBaseService
 
             var message = new HttpRequestMessage
             {
-                RequestUri = new Uri(apiRequest.endpointURL),
+                RequestUri = new Uri(apiRequest.endpointURL, UriKind.Relative),
                 Method = apiRequest.httpMethod.ToHttpMethod()
+
+                /*
+                | Value                | Meaning                                                        |
+                | -------------------- | -------------------------------------------------------------- |
+                | `Absolute`           | The string must be a full URI: `https://example.com/api/villa` |
+                | `Relative`           | The string is relative to a base URI: `/api/villa`             |
+                
+                This is a relative URI because it doesn’t have scheme (https) or host (localhost).
+
+                 */
             };
 
             if (apiRequest.Data is not null)

@@ -7,19 +7,15 @@ namespace Riva.Web.Services;
 
 public class VillaService : BaseService, IVillaService
 {
-    private const string Key = "ServiceUrls:RivaAPI";
-
     private readonly IHttpClientFactory _httpClientFactory;
-
-    private readonly string _RivaUrl;
 
     private const string API_EndPoint = "/api/villa";
 
 
-    public VillaService(IHttpClientFactory httpClient, IConfiguration configuration) : base(httpClient)
+    public VillaService(IHttpClientFactory httpClient) : base(httpClient)
     {
         _httpClientFactory = httpClient;
-        _RivaUrl = configuration.GetValue<string>(Key);
+        
     }
 
     public Task<T?> CreateAsync<T>(VillaCreateDTO model, string token)
@@ -27,7 +23,7 @@ public class VillaService : BaseService, IVillaService
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.POST,
-            endpointURL = $"{_RivaUrl}{API_EndPoint}",
+            endpointURL = $"{API_EndPoint}",
             Data = model,
             token = token
         };
@@ -40,7 +36,7 @@ public class VillaService : BaseService, IVillaService
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.DELETE,
-            endpointURL = $"{_RivaUrl}{API_EndPoint}/{id}",
+            endpointURL = $"{API_EndPoint}/{id}",
             token = token
         };
 
@@ -52,7 +48,7 @@ public class VillaService : BaseService, IVillaService
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.GET,
-            endpointURL = $"{_RivaUrl}{API_EndPoint}",
+            endpointURL = $"{API_EndPoint}",
             token = token
         };
 
@@ -64,7 +60,7 @@ public class VillaService : BaseService, IVillaService
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.GET,
-            endpointURL = $"{_RivaUrl}{API_EndPoint}/{id}",
+            endpointURL = $"{API_EndPoint}/{id}",
             token = token
         };
 
@@ -76,7 +72,7 @@ public class VillaService : BaseService, IVillaService
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.PUT,
-            endpointURL = $"{_RivaUrl}{API_EndPoint}/{model.Id}",
+            endpointURL = $"{API_EndPoint}/{model.Id}",
             Data = model,
             token = token
         };
