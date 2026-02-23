@@ -1,0 +1,525 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+
+:root {
+    --riva-gold: #c9a96e;
+    --riva-dark: #0d0d0d;
+    --riva-cream: #f9f5ef;
+    --riva-light: #ffffff;
+    --riva-muted: #6c6c6c;
+    --riva-border: rgba(201, 169, 110, .35);
+    --hero-height: 90vh;
+    --card-radius: 18px;
+    --transition: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--riva-cream);
+    color: var(--riva-dark);
+}
+
+
+.riva-hero {
+    position: relative;
+    width: 100%;
+    height: var(--hero-height);
+    overflow: hidden;
+    background: #000;
+}
+
+/* Track */
+.riva-carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.18, 1);
+    will-change: transform;
+}
+
+/* Slides */
+.riva-slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.riva-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.55);
+    transition: transform 8s ease;
+}
+
+/* Ken-Burns on active slide */
+.riva-slide.active img {
+    transform: scale(1.08);
+}
+
+/* Overlay gradient */
+.riva-slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, .15) 0%,
+            rgba(0, 0, 0, .55) 60%,
+            rgba(0, 0, 0, .75) 100%);
+    pointer-events: none;
+}
+
+/* ---------- Hero Caption ---------- */
+.riva-hero-caption {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 10;
+    padding: 0 1.5rem;
+    animation: rivaFadeUp .9s ease both;
+}
+
+.riva-hero-caption .riva-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: .75rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--riva-gold);
+    margin-bottom: 1.1rem;
+}
+
+.riva-hero-caption h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+}
+
+.riva-hero-caption p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(255, 255, 255, .8);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+}
+
+/* ---------- Gold CTA Button ---------- */
+.btn-riva {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .85rem 2.6rem;
+    background: transparent;
+    border: 1.5px solid var(--riva-gold);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: .88rem;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 60px;
+    transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+    backdrop-filter: blur(6px);
+}
+
+.btn-riva:hover,
+.btn-riva:focus {
+    background: var(--riva-gold);
+    color: #000;
+    box-shadow: 0 8px 32px rgba(201, 169, 110, .45);
+}
+
+/* ---------- Hero Arrows ---------- */
+.riva-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    background: rgba(255, 255, 255, .12);
+    border: 1.5px solid rgba(255, 255, 255, .35);
+    color: #fff;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+    backdrop-filter: blur(8px);
+}
+
+.riva-arrow:hover {
+    background: var(--riva-gold);
+    border-color: var(--riva-gold);
+}
+
+.riva-arrow-prev {
+    left: 2rem;
+}
+
+.riva-arrow-next {
+    right: 2rem;
+}
+
+.riva-arrow svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---------- Hero Dots ---------- */
+.riva-dots {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    gap: .6rem;
+}
+
+.riva-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .45);
+    cursor: pointer;
+    transition: background var(--transition), width var(--transition);
+    border: none;
+    padding: 0;
+}
+
+.riva-dot.active {
+    background: var(--riva-gold);
+    width: 26px;
+    border-radius: 4px;
+}
+
+
+.riva-collection-title {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .4rem;
+}
+
+.riva-title-line {
+    color: var(--riva-dark);
+    font-style: italic;
+    opacity: .55;
+}
+
+.riva-title-gold {
+    background: linear-gradient(135deg, #c9a96e 0%, #e8c98a 40%, #a0784a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+}
+
+.riva-title-gold::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--riva-gold), transparent);
+    border-radius: 2px;
+}
+
+
+.riva-section {
+    padding: 5rem 0;
+}
+
+.riva-section-label {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--riva-gold);
+    margin-bottom: .6rem;
+}
+
+.riva-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    color: var(--riva-dark);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.riva-section-sub {
+    font-size: 1rem;
+    color: var(--riva-muted);
+    max-width: 500px;
+}
+
+.riva-divider {
+    width: 48px;
+    height: 2px;
+    background: var(--riva-gold);
+    margin: 1.5rem 0 2.5rem;
+}
+
+
+.riva-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.riva-card {
+    background: #fff;
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, .06);
+    transition: transform var(--transition), box-shadow var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.riva-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 24px 56px rgba(0, 0, 0, .13);
+}
+
+/* image wrapper */
+.riva-card-img-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 240px;
+}
+
+.riva-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s ease;
+    display: block;
+}
+
+.riva-card:hover .riva-card-img-wrap img {
+    transform: scale(1.07);
+}
+
+/* pill fallback */
+.riva-card-img-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, .3);
+    font-size: 3.5rem;
+}
+
+/* price badge */
+.riva-price-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, .7);
+    color: var(--riva-gold);
+    border: 1px solid var(--riva-gold);
+    font-size: .8rem;
+    font-weight: 600;
+    padding: .3rem .85rem;
+    border-radius: 60px;
+    backdrop-filter: blur(6px);
+    letter-spacing: .04em;
+}
+
+/* card body */
+.riva-card-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.riva-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: var(--riva-dark);
+    margin-bottom: .5rem;
+}
+
+.riva-card-desc {
+    font-size: .875rem;
+    color: var(--riva-muted);
+    line-height: 1.65;
+    flex: 1;
+    margin-bottom: 1.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* meta row */
+.riva-card-meta {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    font-size: .82rem;
+    color: var(--riva-muted);
+}
+
+.riva-card-meta span {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+}
+
+.riva-card-meta i {
+    color: var(--riva-gold);
+    font-size: 1rem;
+}
+
+/* CTA */
+.riva-card-cta {
+    display: block;
+    text-align: center;
+    padding: .75rem;
+    border: 1.5px solid var(--riva-gold);
+    color: var(--riva-dark);
+    border-radius: 10px;
+    font-size: .85rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition);
+}
+
+.riva-card-cta:hover {
+    background: var(--riva-gold);
+    color: #000;
+}
+
+
+.riva-stats {
+    background: var(--riva-dark);
+    padding: 4rem 0;
+}
+
+.riva-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    text-align: center;
+}
+
+.riva-stat-item i {
+    display: block;
+    font-size: 2rem;
+    color: var(--riva-gold);
+    margin-bottom: .75rem;
+}
+
+.riva-stat-item h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: .2rem;
+}
+
+.riva-stat-item p {
+    font-size: .8rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .5);
+    margin: 0;
+}
+
+.riva-empty {
+    text-align: center;
+    padding: 5rem 1rem;
+    color: var(--riva-muted);
+}
+
+.riva-empty i {
+    font-size: 4rem;
+    color: var(--riva-gold);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.riva-empty h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--riva-dark);
+    margin-bottom: .5rem;
+}
+
+@keyframes rivaFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --hero-height: 70vh;
+    }
+
+    .riva-arrow {
+        width: 40px;
+        height: 40px;
+    }
+
+    .riva-arrow-prev {
+        left: .75rem;
+    }
+
+    .riva-arrow-next {
+        right: .75rem;
+    }
+
+    .riva-search-card {
+        padding: 1.25rem 1rem;
+    }
+
+    .riva-search-wrap {
+        margin-top: -2rem;
+    }
+
+    .riva-section {
+        padding: 3.5rem 0;
+    }
+
+    .riva-grid {
+        grid-template-columns: 1fr;
+    }
+}

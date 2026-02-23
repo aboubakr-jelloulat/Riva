@@ -1,8 +1,206 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Riva.DTO
+@using Riva.Web.Shared
+
+@model IEnumerable<VillaDTO>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<section class="riva-hero" id="riva-hero" aria-label="Hero Carousel">
+
+    <!-- Slide track -->
+    <div class="riva-carousel-track" id="rivaTrack">
+
+        <div class="riva-slide active">
+            <img src="~/Images/home/italy.webp" alt="Scenic Italian Villa" loading="eager" />
+        </div>
+
+        <div class="riva-slide">
+            <img src="~/Images/home/salon-villa-royale.webp" alt="Villa Royale Salon" loading="lazy" />
+        </div>
+
+        <div class="riva-slide">
+            <img src="~/Images/home/bellaria.webp" alt="Bellaria Villa" loading="lazy" />
+        </div>
+
+        <div class="riva-slide">
+            <img src="~/Images/home/arrighi.webp" alt="Arrighi Villa" loading="lazy" />
+        </div>
+
+        <div class="riva-slide">
+            <img src="~/Images/home/tisciano-new.webp" alt="Tisciano Villa" loading="lazy" />
+        </div>
+
+    </div>
+
+    <!-- Caption  -->
+    <div class="riva-hero-caption" id="rivaCaption">
+        <span class="riva-eyebrow">Welcome to Riva</span>
+        <h1 id="rivaSlideTitle">Find Your Perfect<br>Luxury Escape</h1>
+        <p id="rivaSlideSubtitle">Handpicked villas in the world's most breathtaking destinations</p>
+        <a href="#villa-listings" class="btn-riva" id="rivaSlideBtn">
+            <i class="bi bi-compass"></i> Explore Villas
+        </a>
+    </div>
+
+    <!-- Dot indicators -->
+    <div class="riva-dots" id="rivaDots" role="tablist"></div>
+
+</section>
+
+
+
+ -->
+<section class="riva-section" id="villa-listings">
+    <div class="container">
+
+        <!-- Section heading -->
+        <div class="mb-5">
+            <p class="riva-section-label">Our Collection</p>
+            <h2 class="riva-section-title riva-collection-title">
+                <span class="riva-title-line">Luxury</span>
+                <span class="riva-title-gold">Villa Collection</span>
+            </h2>
+            <div class="riva-divider"></div>
+        </div>
+
+        <!-- Error alert -->
+        @if (TempData["error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <!-- Empty  -->
+        @if (Model == null || !Model.Any())
+        {
+            <div class="riva-empty">
+                <i class="bi bi-house-slash"></i>
+                <h4>No Villas Available</h4>
+                <p>There are currently no villas to display. Please check back later!</p>
+            </div>
+        }
+        else
+        {
+            <div class="riva-grid">
+                @foreach (var villa in Model)
+                {
+                    <article class="riva-card">
+                        <div class="riva-card-img-wrap">
+                            @if (!string.IsNullOrEmpty(villa.ImageUrl))
+                            {
+                                <img src="@villa.ImageUrl" alt="@villa.Name" loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="riva-card-img-fallback">
+                                    <i class="bi bi-image"></i>
+                                </div>
+                            }
+                            <span class="riva-price-badge">$@villa.Rate.ToString("N0") / night</span>
+                        </div>
+
+                        <div class="riva-card-body">
+                            <h3 class="riva-card-title">@villa.Name</h3>
+                            <p class="riva-card-desc">@villa.Details</p>
+
+                            <div class="riva-card-meta">
+                                <span><i class="bi bi-people-fill"></i> @villa.Occupancy Guests</span>
+                                <span><i class="bi bi-house-door"></i> @villa.Sqft sqft</span>
+                            </div>
+
+                            <a href="mailto:hello@dotnetmastery.com" class="riva-card-cta">
+                                <i class="bi bi-envelope me-1"></i> Enquire Now
+                            </a>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+
+
+
+@section Scripts {
+<script>
+(function () {
+    const slides = document.querySelectorAll('.riva-slide');
+    const track  = document.getElementById('rivaTrack');
+    const dotsEl = document.getElementById('rivaDots');
+    const titles = [
+        { h: 'Find Your Perfect<br>Luxury Escape',   p: 'Handpicked villas in the world\'s most breathtaking destinations', btn: 'Explore Villas' },
+        { h: 'Elegance Awaits<br>Inside Every Room', p: 'Immerse yourself in refined interiors and world-class comfort',      btn: 'View Collection' },
+        { h: 'Your Private<br>Retreat Begins Here',  p: 'Seclusion, serenity and stunning views — all in one place',          btn: 'Discover More' },
+        { h: 'Timeless Beauty<br>at Every Turn',     p: 'Architecture and nature in perfect harmony',                          btn: 'See Villas' },
+        { h: 'Book Your Dream<br>Villa Today',       p: 'Unforgettable memories await in our curated properties',              btn: 'Check Availability' }
+    ];
+
+    let current = 0;
+    let timer;
+
+
+    slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'riva-dot' + (i === 0 ? ' active' : '');
+        btn.setAttribute('aria-label', 'Slide ' + (i + 1));
+        btn.addEventListener('click', () => goTo(i));
+        dotsEl.appendChild(btn);
+    });
+
+    function updateCaption(idx) {
+        const d = titles[idx] || titles[0];
+        document.getElementById('rivaSlideTitle').innerHTML    = d.h;
+        document.getElementById('rivaSlideSubtitle').textContent = d.p;
+        document.getElementById('rivaSlideBtn').innerHTML      = '<i class="bi bi-compass"></i> ' + d.btn;
+    }
+
+    function goTo(idx) {
+        slides[current].classList.remove('active');
+        dotsEl.children[current].classList.remove('active');
+
+        current = (idx + slides.length) % slides.length;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+
+        slides[current].classList.add('active');
+        dotsEl.children[current].classList.add('active');
+        updateCaption(current);
+        restartTimer();
+    }
+
+    function restartTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => goTo(current + 1), 5500);
+    }
+
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+
+
+    let touchX = 0;
+    const hero = document.getElementById('riva-hero');
+    hero.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+    hero.addEventListener('touchend',   e => {
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+    });
+
+ 
+    document.getElementById('rivaSlideBtn').addEventListener('click', function (e) {
+        const target = document.getElementById('villa-listings');
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+
+    updateCaption(0);
+    restartTimer();
+})();
+</script>
+}

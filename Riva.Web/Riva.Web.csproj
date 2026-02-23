@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Riva.DTO\Riva.DTO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\home\" />
+  </ItemGroup>
+
 </Project>

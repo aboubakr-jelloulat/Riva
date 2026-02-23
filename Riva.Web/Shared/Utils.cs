@@ -8,4 +8,8 @@ public static class Utils
         POST, GET, PUT, DELETE
     }
 
+    public static string GetImageUrl()
+    {
+        return "";
+    }
 }

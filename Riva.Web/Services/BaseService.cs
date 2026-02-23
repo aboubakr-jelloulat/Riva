@@ -36,6 +36,7 @@ public class BaseService : IBaseService
             var message = new HttpRequestMessage
             {
                 RequestUri = new Uri(apiRequest.endpointURL, UriKind.Relative),
+
                 Method = apiRequest.httpMethod.ToHttpMethod()
 
                 /*
