@@ -41,5 +41,38 @@ public class VillaController : Controller
     }
 
 
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(VillaCreateDTO model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            var response = await _villaService.CreateAsync<ApiResponse<VillaDTO>>(model, "");
+
+            if (response is not null && response.Success && response.Data is not null)
+            {
+                TempData["success"] = "Villa created successfully";
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = $"An error occurred: {ex.Message}";
+        }
+
+        return View(model);
+    }
 
 }

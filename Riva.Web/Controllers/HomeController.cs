@@ -1,5 +1,7 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Riva.API.Models;
 using Riva.DTO;
 using Riva.Web.Models;
 using Riva.Web.Services.IServices;
@@ -10,6 +12,7 @@ namespace Riva.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IVillaService _villaService;
+        private readonly IMapper _mapper;
 
         public HomeController(IVillaService villaService, IMapper mapper)
         {
@@ -17,7 +20,7 @@ namespace Riva.Web.Controllers
             _mapper = mapper;
         }
 
-        private readonly IMapper _mapper;
+
 
         public async Task<IActionResult> Index()
         {
@@ -40,15 +43,9 @@ namespace Riva.Web.Controllers
             return View(villas);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+       
+        
+
     }
 }

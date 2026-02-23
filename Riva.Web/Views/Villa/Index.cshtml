@@ -1,0 +1,139 @@
+﻿@using Riva.DTO
+@using Riva.Web.Shared
+
+@model IEnumerable<VillaDTO>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/villa.css" asp-append-version="true" />
+}
+
+<div class="rv-page">
+    <div class="container">
+
+        <div class="rv-page-header">
+            <div>
+                <p class="rv-eyebrow">Admin Panel</p>
+                <h1 class="rv-page-title">Villa Management</h1>
+            </div>
+            <a asp-controller="Villa" asp-action="Create" class="rv-btn-add">
+                <i class="bi bi-plus-lg"></i> Add New Villa
+            </a>
+        </div>
+
+        
+        @if (TempData["success"] != null)
+        {
+            <div class="rv-alert rv-alert-success">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>@TempData["success"]</span>
+                <button class="rv-alert-close" onclick="this.parentElement.remove()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        }
+        @if (TempData["error"] != null)
+        {
+            <div class="rv-alert rv-alert-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>@TempData["error"]</span>
+                <button class="rv-alert-close" onclick="this.parentElement.remove()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        }
+
+        @if (Model == null || !Model.Any())
+        {
+            
+            <div class="rv-table-card">
+                <div class="rv-empty">
+                    <i class="bi bi-house-slash"></i>
+                    <h4>No Villas Yet</h4>
+                    <p>Get started by creating your first luxury villa listing.</p>
+                    <a asp-controller="Villa" asp-action="Create" class="rv-btn-add">
+                        <i class="bi bi-plus-lg"></i> Create Villa
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            
+            <div class="rv-table-card">
+                <div style="overflow-x:auto;">
+                    <table class="rv-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Rate</th>
+                                <th>Occupancy</th>
+                                <th>Sqft</th>
+                                <th style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var villa in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(villa.ImageUrl))
+                                        {
+                                            @* <img src="@SD.GetImageUrl(villa.ImageUrl)" class="rv-thumb" alt="@villa.Name" /> *@
+                                            <img src="villa.ImageUrl" class="rv-thumb" alt="@villa.Name" />
+                                        }
+                                        else
+                                        {
+                                            <div class="rv-thumb-placeholder">
+                                                <i class="bi bi-image"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="rv-villa-name">@villa.Name</div>
+                                        <div class="rv-villa-detail">
+                                            @if (!string.IsNullOrEmpty(villa.Details))
+                                            {
+                                                @(villa.Details.Length > 55 ? villa.Details.Substring(0, 55) + "…" : villa.Details)
+                                            }
+                                            else
+                                            {
+                                                <em style="color:#ccc;">No description</em>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="rv-rate-badge">
+                                            <i class="bi bi-currency-dollar"></i>@villa.Rate.ToString("N0") / night
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="rv-chip">
+                                            <i class="bi bi-people-fill"></i> @villa.Occupancy guests
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="rv-chip">
+                                            <i class="bi bi-rulers"></i> @villa.Sqft sqft
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="rv-action-group">
+                                            <a asp-action="Edit" asp-route-id="@villa.Id" class="rv-icon-btn" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@villa.Id" class="rv-icon-btn danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
