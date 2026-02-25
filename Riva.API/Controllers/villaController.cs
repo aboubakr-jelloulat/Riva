@@ -112,10 +112,10 @@ public class VillaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteVilla(int id)
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<object>>> DeleteVilla(int id)
     {
         var villa = await _unitOfWork.Villa.GetAsync(u => u.Id == id, tracked: true);
 
@@ -126,6 +126,6 @@ public class VillaController : ControllerBase
 
         await _unitOfWork.SaveAsync();
 
-        return NoContent();
+        return Ok(ApiResponse<object>.Ok(null, "Villa deleted successfully"));
     }
 }

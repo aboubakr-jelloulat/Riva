@@ -667,3 +667,145 @@
     flex-shrink: 0;
     margin-top: .1rem;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DELETE PAGE
+═══════════════════════════════════════════════════════════ */
+
+/* Danger button */
+.rv-btn-danger {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
+}
+
+.rv-btn-danger:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, .35);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+/* Read-only input styling */
+.rv-input-readonly,
+.rv-textarea.rv-input-readonly {
+    background: #f5f3f0;
+    color: var(--rv-muted);
+    cursor: not-allowed;
+    user-select: none;
+}
+
+/* Delete image wrapper */
+.rv-delete-img-wrap {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.rv-delete-img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+    filter: saturate(0.7) brightness(0.9);
+    transition: filter var(--rv-tr);
+}
+
+.rv-delete-img-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    background: rgba(239, 68, 68, .18);
+    color: #ef4444;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.rv-delete-img-overlay i {
+    font-size: 1.7rem;
+}
+
+/* ── Confirmation Modal ── */
+.rv-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+}
+
+.rv-modal-backdrop.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.rv-modal {
+    background: var(--rv-white);
+    border-radius: 20px;
+    padding: 2.5rem 2rem 2rem;
+    max-width: 420px;
+    width: calc(100% - 2rem);
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .2);
+    transform: translateY(20px) scale(.97);
+    transition: transform .25s ease;
+}
+
+.rv-modal-backdrop.active .rv-modal {
+    transform: translateY(0) scale(1);
+}
+
+.rv-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    font-size: 1.7rem;
+    color: #ef4444;
+}
+
+.rv-modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--rv-dark);
+    margin: 0 0 .75rem;
+}
+
+.rv-modal-body {
+    font-size: .88rem;
+    color: var(--rv-muted);
+    line-height: 1.6;
+    margin: 0 0 1.75rem;
+}
+
+.rv-modal-body strong {
+    color: var(--rv-dark);
+}
+
+.rv-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+}

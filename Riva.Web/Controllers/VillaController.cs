@@ -75,4 +75,51 @@ public class VillaController : Controller
         return View(model);
     }
 
+    public async Task<IActionResult> Delete(int id)
+    {
+        if (id <= 0)
+        {
+            TempData["error"] = "Invalid villa ID";
+            return RedirectToAction(nameof(Index));
+        }
+
+        try
+        {
+            var response = await _villaService.GetTAsync<ApiResponse<VillaDTO>>(id, "");
+
+            if (response is not null && response.Success && response.Data is not null)
+            {
+                return View(response.Data);
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = $"An error occurred: {ex.Message}";
+        }
+
+        return View();
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(VillaDTO model)
+    {
+        try
+        {
+            var response = await _villaService.DeleteAsync<ApiResponse<object>>(model.Id, "");
+
+            if (response is not null && response.Success)
+            {
+                TempData["success"] = "Villa deleted successfully";
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = $"An error occurred: {ex.Message}";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
 }

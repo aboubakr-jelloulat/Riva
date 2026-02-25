@@ -1,0 +1,164 @@
+﻿@using Riva.DTO
+@using Riva.Web.Shared
+
+@model VillaDTO
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/villa.css" asp-append-version="true" />
+}
+
+<div class="rv-page">
+    <div class="container">
+
+        <!--  Header -->
+        <div class="rv-page-header">
+            <div>
+                <p class="rv-eyebrow">Villa Management</p>
+                <h1 class="rv-page-title">Delete Villa</h1>
+            </div>
+            <a asp-action="Index" class="rv-btn rv-btn-ghost" style="text-decoration:none;">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+
+
+        <form method="post" id="deleteForm">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="rv-form-layout">
+
+                <!-- Details   -->
+                <div>
+                    <div class="rv-form-card">
+                        <div class="rv-form-card-header">
+                            <i class="bi bi-house-door"></i>
+                            <h2>Villa Details</h2>
+                        </div>
+                        <div class="rv-form-card-body">
+
+                            
+                            <div class="rv-form-group">
+                                <label asp-for="Name" class="rv-label">
+                                    Villa Name <span class="req">*</span>
+                                </label>
+                                <input asp-for="Name" disabled class="rv-input rv-input-readonly" />
+                            </div>
+
+                           
+                            <div class="rv-form-group">
+                                <label asp-for="Details" class="rv-label">Description</label>
+                                <textarea asp-for="Details" disabled class="rv-textarea rv-input-readonly" rows="4"></textarea>
+                            </div>
+
+                            
+                            <div class="rv-row">
+                                <div class="rv-form-group">
+                                    <label asp-for="Rate" class="rv-label">
+                                        Nightly Rate <span class="req">*</span>
+                                    </label>
+                                    <div class="rv-input-group">
+                                        <span class="rv-prefix">$</span>
+                                        <input asp-for="Rate" disabled type="number" step="0.01" class="rv-input rv-input-readonly" />
+                                    </div>
+                                </div>
+                                <div class="rv-form-group">
+                                    <label asp-for="Occupancy" class="rv-label">Max Occupancy</label>
+                                    <input asp-for="Occupancy" disabled type="number" class="rv-input rv-input-readonly" />
+                                </div>
+                            </div>
+
+                            
+                            <div class="rv-form-group">
+                                <label asp-for="Sqft" class="rv-label">Area (sq ft)</label>
+                                <input asp-for="Sqft" disabled type="number" class="rv-input rv-input-readonly" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    
+                    <div class="rv-form-actions">
+                        <a asp-action="Index" class="rv-btn rv-btn-ghost" style="text-decoration:none;">
+                            <i class="bi bi-x"></i> Cancel
+                        </a>
+                        <button type="button" class="rv-btn rv-btn-danger" onclick="openConfirmModal()">
+                            <i class="bi bi-trash3"></i> Delete Villa
+                        </button>
+                    </div>
+                </div>
+
+                <!--  Image  -->
+                <div>
+                    <div class="rv-img-card">
+                        <div class="rv-img-card-header">
+                            <i class="bi bi-image"></i>
+                            <span>Villa Photo</span>
+                        </div>
+                        <div class="rv-img-card-body">
+                            @if (!string.IsNullOrEmpty(Model?.ImageUrl))
+                            {
+                                <div class="rv-delete-img-wrap">
+                                    <img src="Model.ImageUrl" alt="@Model?.Name" class="rv-delete-img" />
+                                    <div class="rv-delete-img-overlay">
+                                        <i class="bi bi-trash3-fill"></i>
+                                        <span>Will be deleted</span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="rv-thumb-placeholder" style="width:100%;height:200px;border-radius:12px;font-size:2rem;">
+                                    <i class="bi bi-image"></i>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- ── Confirmation Modal ── -->
+<div class="rv-modal-backdrop" id="confirmModal" onclick="if(event.target===this) closeConfirmModal()">
+    <div class="rv-modal">
+        <div class="rv-modal-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <h3 class="rv-modal-title">Confirm Deletion</h3>
+        <p class="rv-modal-body">
+            Are you sure you want to permanently delete
+            <strong>@Model?.Name</strong>?
+            This cannot be undone.
+        </p>
+        <div class="rv-modal-actions">
+            <button type="button" class="rv-btn rv-btn-ghost" onclick="closeConfirmModal()">
+                Cancel
+            </button>
+            <button type="button" class="rv-btn rv-btn-danger" onclick="document.getElementById('deleteForm').submit()">
+                <i class="bi bi-trash3"></i> Yes, Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function openConfirmModal() {
+            document.getElementById('confirmModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeConfirmModal();
+        });
+    </script>
+}
