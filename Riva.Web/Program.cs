@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Riva.API.Models;
 using Riva.DTO;
 using Riva.Web.Services;
 using Riva.Web.Services.IServices;
@@ -29,6 +27,7 @@ builder.Services.AddHttpClient("Riva.API", client =>
 });
 
 builder.Services.AddScoped<IVillaService, VillaService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

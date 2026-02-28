@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Riva.API.Models;
 using Riva.DTO;
 using Riva.Web.Models;
 using Riva.Web.Services.IServices;

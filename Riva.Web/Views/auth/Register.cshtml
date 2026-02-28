@@ -1,0 +1,205 @@
+﻿
+@using Riva.DTO
+@using Riva.Web.Shared﻿
+
+@model RegisterationRequestDTO
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+@section Styles {
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2075&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        main {
+            padding-bottom: 0 !important;
+        }
+        .footer {
+            display: none !important;
+        }
+        .navbar {
+            display: none !important;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 100%);
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1050;
+            overflow-y: auto;
+        }
+        .brand-logo {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            border-color: #0d6efd;
+            background-color: #fff;
+        }
+        .btn-brand {
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-brand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3);
+        }
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+            z-index: 1060;
+        }
+        .back-home:hover {
+            color: #f8f9fa;
+            transform: translateX(-5px);
+        }
+    </style>
+}
+
+<div class="auth-container">
+    <a asp-controller="Home" asp-action="Index" class="back-home">
+        <i class="bi bi-arrow-left"></i> Back to Home
+    </a>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5">
+                
+                @if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm text-center border-0 rounded-3 mb-4" role="alert">
+                        <i class="bi bi-check-circle-fill me-2 fs-5 align-middle"></i> @TempData["success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm text-center border-0 rounded-3 mb-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5 align-middle"></i> @TempData["error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="card glass-card">
+                    <div class="card-body p-4 p-sm-5">
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <div class="mb-3 brand-logo">
+                                <i class="bi bi-buildings-fill"></i>
+                            </div>
+                            <h2 class="fw-bold text-dark mb-1">Create Account</h2>
+                            <p class="text-muted">Join our exclusive villa community</p>
+                        </div>
+
+                        <!-- Register Form -->
+                        <form asp-action="Register" method="post" class="needs-validation">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small fw-medium"></div>
+
+                            <!-- Name Field -->
+                            <div class="form-floating mb-3">
+                                <input asp-for="Name" class="form-control" placeholder="Full Name" />
+                                <label asp-for="Name" class="text-muted">
+                                    <i class="bi bi-person me-2"></i>Full Name
+                                </label>
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Email Field -->
+                            <div class="form-floating mb-3">
+                                <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                                <label asp-for="Email" class="text-muted">
+                                    <i class="bi bi-envelope me-2"></i>Email Address
+                                </label>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="form-floating mb-3">
+                                <input asp-for="Password" class="form-control" placeholder="Password" type="password" />
+                                <label asp-for="Password" class="text-muted">
+                                    <i class="bi bi-lock me-2"></i>Password
+                                </label>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Role Field -->
+                            <div class="form-floating mb-4">
+                                <select asp-for="Role" class="form-select">
+                                    <option value="Customer" selected>Customer</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                                <label asp-for="Role" class="text-muted">
+                                    <i class="bi bi-shield-check me-2"></i>Account Type
+                                </label>
+                                <span asp-validation-for="Role" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary text-white btn-brand btn-lg">
+                                    Create Account <i class="bi bi-arrow-right ms-2 align-middle"></i>
+                                </button>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="position-relative mb-4 text-center">
+                                <hr class="border-secondary opacity-25">
+                                <span class="position-absolute top-50 start-50 translate-middle px-3 text-muted small" style="background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); border-radius: 10px;">
+                                    Already have an account?
+                                </span>
+                            </div>
+
+                            <!-- Login Link -->
+                            <div class="text-center">
+                                <a asp-action="Login" class="btn btn-outline-dark rounded-pill px-4 py-2 border-2 fw-medium">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In Instead
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
