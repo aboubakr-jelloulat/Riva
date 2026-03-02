@@ -123,7 +123,7 @@
 
                 <div class="card glass-card">
                     <div class="card-body p-4 p-sm-5">
-                        <!-- Header -->
+                        
                         <div class="text-center mb-4">
                             <div class="mb-3 brand-logo">
                                 <i class="bi bi-buildings-fill"></i>
@@ -136,34 +136,34 @@
                         <form asp-action="Register" method="post" class="needs-validation">
                             <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small fw-medium"></div>
 
-                            <!-- Name Field -->
+                            <!-- Name  -->
                             <div class="form-floating mb-3">
-                                <input asp-for="Name" class="form-control" placeholder="Full Name" />
+                                <input asp-for="Name" class="form-control" />
                                 <label asp-for="Name" class="text-muted">
                                     <i class="bi bi-person me-2"></i>Full Name
                                 </label>
                                 <span asp-validation-for="Name" class="text-danger small"></span>
                             </div>
 
-                            <!-- Email Field -->
+                            <!-- Email  -->
                             <div class="form-floating mb-3">
-                                <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                                <input asp-for="Email" class="form-control"  />
                                 <label asp-for="Email" class="text-muted">
                                     <i class="bi bi-envelope me-2"></i>Email Address
                                 </label>
                                 <span asp-validation-for="Email" class="text-danger small"></span>
                             </div>
 
-                            <!-- Password Field -->
+                            <!-- Password  -->
                             <div class="form-floating mb-3">
-                                <input asp-for="Password" class="form-control" placeholder="Password" type="password" />
+                                <input asp-for="Password" class="form-control"  type="password" />
                                 <label asp-for="Password" class="text-muted">
                                     <i class="bi bi-lock me-2"></i>Password
                                 </label>
                                 <span asp-validation-for="Password" class="text-danger small"></span>
                             </div>
 
-                            <!-- Role Field -->
+                            <!-- Role  -->
                             <div class="form-floating mb-4">
                                 <select asp-for="Role" class="form-select">
                                     <option value="Customer" selected>Customer</option>

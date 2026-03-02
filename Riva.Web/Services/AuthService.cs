@@ -8,7 +8,7 @@ public class AuthService : BaseService, IAuthService
 {
     private const string API_EndPoint = "/api/Auth";
 
-    public AuthService(IHttpClientFactory httpClient) : base(httpClient)
+    public AuthService(IHttpClientFactory httpClient, IHttpContextAccessor httpContextAccessor) : base(httpClient, httpContextAccessor)
     {
         
 

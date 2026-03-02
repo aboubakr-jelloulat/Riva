@@ -12,69 +12,64 @@ public class VillaService : BaseService, IVillaService
     private const string API_EndPoint = "/api/villa";
 
 
-    public VillaService(IHttpClientFactory httpClient) : base(httpClient)
+    public VillaService(IHttpClientFactory httpClient, IHttpContextAccessor httpContextAccessor) : base(httpClient, httpContextAccessor)
     {
         _httpClientFactory = httpClient;
         
     }
 
-    public Task<T?> CreateAsync<T>(VillaCreateDTO model, string token)
+    public Task<T?> CreateAsync<T>(VillaCreateDTO model)
     {
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.POST,
             endpointURL = $"{API_EndPoint}",
-            Data = model,
-            token = token
+            Data = model
         };
 
         return SendAsync<T>(apiRequest);
     }
 
-    public Task<T?> DeleteAsync<T>(int id, string token)
+    public Task<T?> DeleteAsync<T>(int id)
     {
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.DELETE,
-            endpointURL = $"{API_EndPoint}/{id}",
-            token = token
+            endpointURL = $"{API_EndPoint}/{id}"
         };
 
         return SendAsync<T>(apiRequest);
     }
 
-    public Task<T?> GetAllAsync<T>(string token)
+    public Task<T?> GetAllAsync<T>()
     {
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.GET,
-            endpointURL = $"{API_EndPoint}",
-            token = token
+            endpointURL = $"{API_EndPoint}"
         };
 
         return SendAsync<T>(apiRequest);
     }
 
-    public Task<T?> GetTAsync<T>(int id, string token)
+    public Task<T?> GetTAsync<T>(int id)
     {
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.GET,
-            endpointURL = $"{API_EndPoint}/{id}",
-            token = token
+            endpointURL = $"{API_EndPoint}/{id}"
         };
 
         return SendAsync<T>(apiRequest);
     }
 
-    public Task<T?> UpdateAsync<T>(VillaUpdateDTO model, string token)
+    public Task<T?> UpdateAsync<T>(VillaUpdateDTO model)
     {
         var apiRequest = new ApiRequest
         {
             httpMethod = Utils.HTTPmethods.PUT,
             endpointURL = $"{API_EndPoint}/{model.Id}",
-            Data = model,
-            token = token
+            Data = model
         };
 
         return SendAsync<T>(apiRequest);

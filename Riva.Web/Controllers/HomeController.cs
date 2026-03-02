@@ -27,7 +27,7 @@ namespace Riva.Web.Controllers
 
             try
             {
-                var response = await _villaService.GetAllAsync<ApiResponse<List<VillaDTO>>>("");
+                var response = await _villaService.GetAllAsync<ApiResponse<List<VillaDTO>>>();
 
                 if (response is not null && response.Success && response.Data is not null)
                 {

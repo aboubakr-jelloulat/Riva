@@ -1,7 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Riva.DTO;
 using Riva.Web.Services.IServices;
+using Riva.Web.Shared;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Riva.Web.Controllers;
 
@@ -33,7 +39,22 @@ public class authController : Controller
 
             if (response is not null && response.Success && response.Data is not null)
             {
-                // token logic
+                var mdl = response.Data;
+
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(mdl.Token);
+
+                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "email").Value));
+                identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
+
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                HttpContext.Session.SetString(Utils.SessionAccessToken, mdl.Token);
+
+                return RedirectToAction("Index", "Home");
             }
 
         }
@@ -66,9 +87,16 @@ public class authController : Controller
         {
             var response = await _authService.RegisterAsync<ApiResponse<UserDTO>>(model);
 
+
             if (response is not null && response.Success && response.Data is not null)
             {
-                // token logic
+                TempData["success"] = "Registration successful! Please login with your credentials.";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                TempData["error"] = response?.Message ?? "Registration failed. Please try again.";
+                return View(model);
             }
 
         }
@@ -88,7 +116,9 @@ public class authController : Controller
 
     public async Task<IActionResult> Logout()
     {
-        return View();
+        await HttpContext.SignOutAsync();
+
+        return RedirectToAction("Index", "Home");
     }
 
 

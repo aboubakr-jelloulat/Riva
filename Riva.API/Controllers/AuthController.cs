@@ -13,8 +13,8 @@ namespace Riva.API.Controllers
         private readonly IAuthService _authService = authService;
 
 
-        [HttpPost("register")]
 
+        [HttpPost("register")]
         [ProducesResponseType(typeof(ApiResponse<UserDTO>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -50,7 +50,6 @@ namespace Riva.API.Controllers
 
 
         [HttpPost("login")]
-
         [ProducesResponseType(typeof(ApiResponse<LoginResponseDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

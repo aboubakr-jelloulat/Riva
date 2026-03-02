@@ -9,7 +9,6 @@ using Riva.DTO;
 
 [ApiController]
 [Route("api/villa")]
-//[Authorize(Roles = "Admin, Customer")]
 public class VillaController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -53,6 +52,7 @@ public class VillaController : ControllerBase
         return Ok(ApiResponse<VillaDTO>.Ok(villaDto, "Villa retrieved successfully"));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<VillaCreateDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -80,6 +80,7 @@ public class VillaController : ControllerBase
         return CreatedAtAction(nameof(GetVillaById), new { id = villa.Id }, response);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -112,7 +113,7 @@ public class VillaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<object>>> DeleteVilla(int id)

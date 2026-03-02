@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Riva.DTO;
 using Riva.Web.Services.IServices;
@@ -18,14 +19,14 @@ public class VillaController : Controller
     }
 
 
-
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
         List<VillaDTO> villas = new();
 
         try
         {
-            var response = await _villaService.GetAllAsync<ApiResponse<List<VillaDTO>>>("");
+            var response = await _villaService.GetAllAsync<ApiResponse<List<VillaDTO>>>();
 
             if (response is not null && response.Success && response.Data is not null)
             {
@@ -40,13 +41,13 @@ public class VillaController : Controller
         return View(villas);
     }
 
-
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(VillaCreateDTO model)
@@ -58,7 +59,7 @@ public class VillaController : Controller
 
         try
         {
-            var response = await _villaService.CreateAsync<ApiResponse<VillaDTO>>(model, "");
+            var response = await _villaService.CreateAsync<ApiResponse<VillaDTO>>(model);
 
             if (response is not null && response.Success && response.Data is not null)
             {
@@ -75,12 +76,12 @@ public class VillaController : Controller
         return View(model);
     }
 
-
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id)
     {
         try
         {
-            var response = await _villaService.GetTAsync<ApiResponse<VillaDTO>>(id, "");
+            var response = await _villaService.GetTAsync<ApiResponse<VillaDTO>>(id);
 
             if (response is not null && response.Success && response.Data is not null)
             {
@@ -96,13 +97,14 @@ public class VillaController : Controller
         return View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(VillaUpdateDTO model)
     {
         try
         {
-            var response = await _villaService.UpdateAsync<ApiResponse<object>>(model, "");
+            var response = await _villaService.UpdateAsync<ApiResponse<object>>(model);
 
             if (response is not null && response.Success)
             {
@@ -118,13 +120,13 @@ public class VillaController : Controller
     }
 
 
-
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
 
         try
         {
-            var response = await _villaService.GetTAsync<ApiResponse<VillaDTO>>(id, "");
+            var response = await _villaService.GetTAsync<ApiResponse<VillaDTO>>(id);
 
             if (response is not null && response.Success && response.Data is not null)
             {
@@ -140,13 +142,14 @@ public class VillaController : Controller
     }
 
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(VillaDTO model)
     {
         try
         {
-            var response = await _villaService.DeleteAsync<ApiResponse<object>>(model.Id, "");
+            var response = await _villaService.DeleteAsync<ApiResponse<object>>(model.Id);
 
             if (response is not null && response.Success)
             {

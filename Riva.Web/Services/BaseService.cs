@@ -1,6 +1,8 @@
 ﻿using Riva.DTO;
 using Riva.Web.Services.IServices;
 using Riva.Web.Shared;
+using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using static Riva.Web.Shared.Utils;
 
@@ -13,6 +15,7 @@ public class BaseService : IBaseService
     public ApiResponse<object> ResponseModel { get ; set; }
 
     public IHttpClientFactory _httpClient { get; set; }
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     private static readonly JsonSerializerOptions jsonOptions = new()
     {
@@ -20,11 +23,13 @@ public class BaseService : IBaseService
         /* When converting JSON to a C# object ignore uppercase and lowercase differences in property names */
     };
 
-    public BaseService(IHttpClientFactory httpClient)
+    public BaseService(IHttpClientFactory httpClient, IHttpContextAccessor httpContextAccessor)
     {
         ResponseModel = new();
 
         _httpClient = httpClient;
+
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<T?> SendAsync<T>(ApiRequest apiRequest, bool withBearer = true)
@@ -39,16 +44,13 @@ public class BaseService : IBaseService
 
                 Method = apiRequest.httpMethod.ToHttpMethod()
 
-                /*
-                | Value                | Meaning                                                        |
-                | -------------------- | -------------------------------------------------------------- |
-                | `Absolute`           | The string must be a full URI: `https://example.com/api/villa` |
-                | `Relative`           | The string is relative to a base URI: `/api/villa`             |
-                
-                This is a relative URI because it doesn’t have scheme (https) or host (localhost).
-
-                 */
             };
+
+            var token = _httpContextAccessor.HttpContext?.Session?.GetString(Utils.SessionAccessToken);
+            if (! string.IsNullOrEmpty(token))
+            {
+                message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
 
             if (apiRequest.Data is not null)
             {

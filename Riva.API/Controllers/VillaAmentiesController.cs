@@ -13,7 +13,7 @@ namespace Riva.API.Controllers;
 
 [ApiController]
 [Route("api/villaAmenities")]
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 public class VillaAmenitiesController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;

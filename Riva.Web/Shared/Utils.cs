@@ -8,6 +8,8 @@ public static class Utils
         POST, GET, PUT, DELETE
     }
 
+    public const string SessionAccessToken = "JWTToken";
+
     public static string GetImageUrl()
     {
         return "";
